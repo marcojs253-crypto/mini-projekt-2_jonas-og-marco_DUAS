@@ -5,14 +5,14 @@ import numpy as np
 #############################################################################################################################
 
 # Open picture
-brikker = cv2.imread("9.jpg")
+brikker = cv2.imread("14.jpg")
 
 # Convert BGR to HSV
 brikker_hsv = cv2.cvtColor(brikker, cv2.COLOR_BGR2HSV)
 
 # Forest-brik range
-lower_water = np.array([0, 0, 4])
-upper_water = np.array([200, 35, 64])
+lower_water = np.array([78, 193 , 109])
+upper_water = np.array([109, 255, 204])
 
 # Lav maske (hvid = pixels indenfor range)
 mask_water = cv2.inRange(brikker_hsv, lower_water, upper_water)
