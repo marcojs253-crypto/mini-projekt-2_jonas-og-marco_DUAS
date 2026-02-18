@@ -9,7 +9,7 @@ def main():
     print("+-------------------------------+")
     print("| King Domino points calculator |")
     print("+-------------------------------+")
-    image_path = r"C:\programering AAU\P0 projekter\Gruppe7-P0\16.jpg"
+    image_path = "1.jpg"
     if not os.path.isfile(image_path):
         print("Image not found")
         return
@@ -21,10 +21,7 @@ def main():
     for y, row in enumerate(tiles):
         for x, tile in enumerate(row):
             print(f"Tile ({x}, {y}):")
-            terrain = get_terrain(tile)
-            print(terrain)
-            terrain_counts[terrain] = terrain_counts.get(terrain, 0) + 1
-            print("=====")
+           
 
     print("\nTerrain counts:")
     for terrain, count in terrain_counts.items():
@@ -44,7 +41,6 @@ def get_tiles(image):
 # Determine the type of terrain in a tile
 
 
-def get_terrain(tile):
     hsv_tile = cv.cvtColor(tile, cv.COLOR_BGR2HSV)
     hue, saturation, value = np.median(hsv_tile, axis=(0, 1))
     print(f"H: {hue}, S: {saturation}, V: {value}")
