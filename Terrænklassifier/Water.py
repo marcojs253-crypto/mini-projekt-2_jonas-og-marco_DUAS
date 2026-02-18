@@ -5,7 +5,7 @@ import numpy as np
 #############################################################################################################################
 
 # Open picture
-brikker = cv2.imread("14.jpg")
+brikker = cv2.imread("75.jpg")
 
 # Convert BGR to HSV
 brikker_hsv = cv2.cvtColor(brikker, cv2.COLOR_BGR2HSV)
