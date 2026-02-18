@@ -1,7 +1,7 @@
 import cv2
 
 # Open picture
-brikker = cv2.imread("/Users/jonassvirkaer/Desktop/python_projekter/P2 - Opgaver/Design og udvikling af AI-systemer/Miniprojekt/King_domino.png")
+brikker = cv2.imread("1.jpg")
 
 # Converts BGR to HSV values
 brikker_hsv = cv2.cvtColor(brikker, cv2.COLOR_BGR2HSV)
@@ -13,9 +13,9 @@ brikker_saturation = brikker_hsv[:, : ,1]
 brikker_hue = brikker_hsv[:, :, 0]
 #######################################################################################################################################
 
-mask_v = cv2.inRange(brikker_value, 200, 225)
-mask_s = cv2.inRange(brikker_saturation, 1, 150)
-mask_h = cv2.inRange(brikker_hue, 20, 40)
+mask_v = cv2.inRange(brikker_value, 1, 255)
+mask_s = cv2.inRange(brikker_saturation, 1, 255)
+mask_h = cv2.inRange(brikker_hue, 1, 255)
 mask_combined = cv2.bitwise_and(mask_h, mask_s)
 mask_combined = cv2.bitwise_and(mask_combined, mask_v)
 
@@ -31,9 +31,9 @@ out = brikker.copy()
 kept = []
 for c in contours:
     area = cv2.contourArea(c)
-    if area < 180:
+    if area < 1:
         continue
-    if area > 2000:
+    if area > 20000000000:
         continue
     kept.append(c)
 
@@ -46,7 +46,7 @@ final_kept = []
 for element in kept:
     perimeter = cv2.arcLength(element, True)
 
-    if perimeter > 10000:
+    if perimeter > 100000000:
         continue
     final_kept.append(element)
     print("Area:", area, "Perimeter:", perimeter)
