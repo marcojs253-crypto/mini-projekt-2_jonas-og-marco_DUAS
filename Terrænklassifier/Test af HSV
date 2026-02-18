@@ -1,0 +1,15 @@
+import cv2
+import numpy as np
+
+#############################################################################################################################
+#############################################################################################################################
+
+# Open picture
+brikker = cv2.imread("57.jpg")
+
+brikker_ycrcb = cv2.cvtColor(brikker, cv2.COLOR_BGR2YCrCb)
+
+cv2.imshow("HSV-værdi", brikker_ycrcb)
+cv2.imshow("Original", brikker)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
