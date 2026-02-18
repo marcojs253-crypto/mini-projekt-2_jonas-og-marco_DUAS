@@ -5,38 +5,22 @@ import numpy as np
 #############################################################################################################################
 
 # Open picture
-<<<<<<< HEAD
-brikker = cv2.imread("9.jpg")
-=======
 brikker = cv2.imread("59.jpg")
->>>>>>> 72ee445 (HALLJØJ)
 
 # Convert BGR to HSV
 brikker_hsv = cv2.cvtColor(brikker, cv2.COLOR_BGR2HSV)
 
 # Forest-brik range
-<<<<<<< HEAD
-lower_water = np.array([0, 0, 4])
-upper_water = np.array([200, 35, 64])
-=======
 lower_mine = np.array([0, 0, 0])
 upper_mine = np.array([200, 35, 64])
->>>>>>> 72ee445 (HALLJØJ)
 
 # Lav maske (hvid = pixels indenfor range)
-mask_water = cv2.inRange(brikker_hsv, lower_water, upper_water)
+mask_mine = cv2.inRange(brikker_hsv, lower_mine, upper_mine)
 
 # Behold KUN pixels i masken
-result_water = cv2.bitwise_and(brikker, brikker, mask=mask_water)
+result_mine = cv2.bitwise_and(brikker, brikker, mask=mask_mine)
 
 cv2.imshow("Original", brikker)
-<<<<<<< HEAD
-cv2.imshow("Mask (hvid = fundet)", mask_water)
-
-cv2.waitKey(0)
-cv2.destroyAllWindows()
-=======
->>>>>>> 72ee445 (HALLJØJ)
 
 #############################################################################################################################
 #############################################################################################################################
