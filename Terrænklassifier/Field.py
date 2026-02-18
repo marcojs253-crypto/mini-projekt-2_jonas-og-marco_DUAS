@@ -7,7 +7,7 @@ import cv2
 #############################################################################################################################
 
 # Open picture
-brikker = cv2.imread("6.jpg")
+brikker = cv2.imread("73.jpg")
 
 # Convert BGR to HSV
 brikker_hsv = cv2.cvtColor(brikker, cv2.COLOR_BGR2HSV)
