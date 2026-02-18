@@ -1,15 +1,17 @@
 import cv2
 import numpy as np
 
-#############################################################################################################################
-#############################################################################################################################
-
 # Open picture
-brikker = cv2.imread("57.jpg")
+brikker = cv2.imread("51.jpg")
 
 brikker_ycrcb = cv2.cvtColor(brikker, cv2.COLOR_BGR2YCrCb)
 
-cv2.imshow("HSV-værdi", brikker_ycrcb)
-cv2.imshow("Original", brikker)
+def get_pixel(event, x, y, flags, param):
+    if event == cv2.EVENT_LBUTTONDOWN:
+        y_val, cr_val, cb_val = brikker_ycrcb[y, x]
+        print(f"Pixel ({x},{y}) -> Y: {y_val}, Cr: {cr_val}, Cb: {cb_val}")
+
+cv2.imshow("Original vs YCrCb", brikker_ycrcb)
+cv2.setMouseCallback("Original vs YCrCb", get_pixel)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
