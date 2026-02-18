@@ -9,7 +9,6 @@ def main():
         return
     image = cv.imread(image_path)
     tiles = get_tiles(image)
-    print(len(tiles))
     # Fra chatgpt
     terrain_counts = {}
     for y, row in enumerate(tiles):
