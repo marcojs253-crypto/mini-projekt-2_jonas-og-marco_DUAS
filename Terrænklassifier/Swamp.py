@@ -11,8 +11,8 @@ brikker = cv2.imread("14.jpg")
 brikker_hsv = cv2.cvtColor(brikker, cv2.COLOR_BGR2HSV)
 
 # Forest-brik range
-lower_Swamp = np.array([78, 193 , 109])
-upper_Swamp = np.array([109, 255, 204])
+lower_Swamp = np.array([17, 23 , 68])
+upper_Swamp = np.array([26, 181, 144])
 
 # Lav maske (hvid = pixels indenfor range)
 mask_Swamp = cv2.inRange(brikker_hsv, lower_Swamp, upper_Swamp)

@@ -31,7 +31,7 @@ def main():
 
         # Convert BGR to YCrCb
         brikker_ycrcb = cv2.cvtColor(brikker, cv2.COLOR_BGR2YCrCb)
-
+        cv2.imshow("Filtered ", brikker_ycrcb)
         mask_Grass = cv2.inRange(brikker_ycrcb, lower_Grass, upper_Grass)
         result_Grass = cv2.bitwise_and(brikker, brikker, mask=mask_Grass)
 
