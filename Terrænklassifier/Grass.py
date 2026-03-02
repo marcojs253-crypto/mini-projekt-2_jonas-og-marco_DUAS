@@ -1,39 +1,47 @@
 import cv2
 import numpy as np
+import os
 
-lower_Grass = np.array([70, 80, 50])
+#############################################################################################################################
+#############################################################################################################################
+
+# Grass YCrCb range
+lower_Grass = np.array([60, 80, 50])
 upper_Grass = np.array([138, 127, 104])
 
-# Open picture
-brikker = cv2.imread("57.jpg")
-
+#############################################################################################################################
+#############################################################################################################################
 def main():
 
-    def get_tiles(img):
+    def get_tiles(brikker):
         tiles = []
         for y in range(5):
             tiles.append([])
             for x in range(5):
-                tiles[-1].append(img[y*100:(y+1)*100, x*100:(x+1)*100])
+                tiles[-1].append(brikker[y*100:(y+1)*100, x*100:(x+1)*100])
         return tiles
 
-    for i in range(1, 74):  # 1.jpg til 40.jpg
+    # Find script directory og parent directory
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    parent_dir = os.path.dirname(script_dir)
+    
+    # Opret mappe til at gemme grass felter
+    output_folder = os.path.join(parent_dir, "felter billeder", "Grass")
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
 
-        filename = f"{i}.jpg"
-        print(f"Processing {filename}")
-
+    # Loop gennem alle billeder 1-74
+    for i in range(3, 75):
+        filename = os.path.join(parent_dir, f"{i}.jpg")
+        print(f"\n=== Processing {i}.jpg ===")
+        
         brikker = cv2.imread(filename)
-        brikker_2 = cv2.imread(filename)
-
+        
         if brikker is None:
-            print("File not found")
+            print(f"  Kunne ikke indlæse {filename}, springer over")
             continue
-
-        # Convert BGR to YCrCb
-        brikker_ycrcb = cv2.cvtColor(brikker, cv2.COLOR_BGR2YCrCb)
-        cv2.imshow("Filtered ", brikker_ycrcb)
-        mask_Grass = cv2.inRange(brikker_ycrcb, lower_Grass, upper_Grass)
-        result_Grass = cv2.bitwise_and(brikker, brikker, mask=mask_Grass)
+        
+        brikker_original = brikker.copy()  # Gem kopi af original
 
         tiles = get_tiles(brikker)
 
@@ -41,33 +49,59 @@ def main():
             for x in range(5):
                 tile = tiles[y][x]
 
+                # Convert BGR to YCrCb
                 tile_ycrcb = cv2.cvtColor(tile, cv2.COLOR_BGR2YCrCb)
                 tile_mask = cv2.inRange(tile_ycrcb, lower_Grass, upper_Grass)
 
+                # Efter masken er lavet:
+                kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3,3))
+                tile_mask = cv2.morphologyEx(tile_mask, cv2.MORPH_OPEN, kernel)  # Fjern små prikker
+                tile_mask = cv2.morphologyEx(tile_mask, cv2.MORPH_CLOSE, kernel)  # Fyld små huller
+
                 grass_pixels = cv2.countNonZero(tile_mask)
-                print(f"Tile ({y},{x}) grass pixels: {grass_pixels}")
+                
+                # Beregn procentdel i stedet for absolut antal
+                tile_total_pixels = tile.shape[0] * tile.shape[1]
+                grass_percentage = (grass_pixels / tile_total_pixels) * 100
+                
+                print(f"Tile ({y},{x}) grass pixels: {grass_pixels} ({grass_percentage:.1f}%)")
+                
+                # Filtrer hvis > 30% af tile er grass
+                if grass_percentage > 20:  
+                    # Dette ER et grass-felt, gem det
+                    output_filename = f"{output_folder}/grass_{i}_{y}_{x}.jpg"
+                    cv2.imwrite(output_filename, tile)
+                    print(f"  -> Gemt som grass_{i}_{y}_{x}.jpg")
+                else:
+                    tiles[y][x][:] = 0  # Ikke et grass, gør sort
 
-                if grass_pixels < 2250:
-                    tiles[y][x][:] = 0
-
+        # Saml det filtrerede board igen
         result = brikker.copy()
         for y in range(5):
             for x in range(5):
                 result[y*100:(y+1)*100, x*100:(x+1)*100] = tiles[y][x]
 
-        combined = np.hstack((brikker_2, result))
+        # Vis original og filtreret i separate vinduer
+        cv2.imshow("Original", brikker_original)
+        cv2.imshow("Filtreret", result)
+        
+        print("\nTryk ESC for næste billede...")
+        while True:
+            key = cv2.waitKey(0)
+            if key == 27:  # ESC tast
+                cv2.destroyAllWindows()
+                break
 
-        cv2.imshow("Filtered board", combined)
-        cv2.imshow("Filtered board", combined)
-
-        key = cv2.waitKey(0)
-
-        if key == 27:  # ESC
-            cv2.destroyWindow("Filtered board")
-            continue
-
-
+    print(f"\n✓ Færdig! Grass-felter gemt i: {output_folder}")
     cv2.destroyAllWindows()
+
+
+if __name__ == "__main__":
+    main()
+
+
+#############################################################################################################################
+#############################################################################################################################
 
 
 if __name__ == "__main__":
