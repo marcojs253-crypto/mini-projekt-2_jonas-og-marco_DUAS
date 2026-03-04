@@ -5,11 +5,43 @@ import numpy as np
 #############################################################################################################################
 
 # Open picture
-billede = cv2.imread("1.jpg")
+billede = cv2.imread("2.jpg")
 
-# Convert BGR to YCrCb
+
+####
+#indsæt kode her
+
+
+
+
+
+#
+
+
+
+###
+# Convert BGR to different color spaces
 billede_hsv = cv2.cvtColor(billede, cv2.COLOR_BGR2HSV)
+billede_hls = cv2.cvtColor(billede, cv2.COLOR_BGR2HLS)
 
-cv2.imshow("Filtered board", billede_hsv)
+# Remove green from HSV (set to black)
+billede_hsv_filtered = billede_hsv.copy()
+lower_green = np.array([11, 80, 40])  # Lavere krav til saturation og value
+upper_green = np.array([85, 255, 255])
+mask_green = cv2.inRange(billede_hsv, lower_green, upper_green)
+billede_hsv_filtered[mask_green > 0] = [0, 0, 0]
+# Convert back to BGR for display
+billede_hsv_filtered_bgr = cv2.cvtColor(billede_hsv_filtered, cv2.COLOR_HSV2BGR)
+
+billede_hls = cv2.cvtColor(billede_hsv_filtered_bgr, cv2.COLOR_BGR2HLS)
+billede_rgb = cv2.cvtColor(billede_hsv_filtered_bgr, cv2.COLOR_BGR2RGB)
+#
+
+# Show all images
+# cv2.imshow("Original (BGR)", billede)
+# cv2.imshow("HSV - No Green", billede_hsv_filtered_bgr)
+cv2.imshow("HLS - No Red", billede_hls)
+cv2.imshow("RGB", billede_rgb)
+
 cv2.waitKey(0)
 cv2.destroyAllWindows()
